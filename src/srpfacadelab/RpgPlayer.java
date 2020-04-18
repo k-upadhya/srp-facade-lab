@@ -59,8 +59,12 @@ public class RpgPlayer {
             return true;
         }
 
-        if (item.isRare())
-            gameEngine.playSpecialEffect("cool_swirly_particles");
+        if (item.isRare()) {
+            if (item.isUnique())
+                gameEngine.playSpecialEffect("blue_swirly");
+            else
+                gameEngine.playSpecialEffect("cool_swirly_particles");
+        }
 
         inventory.add(item);
 
@@ -97,7 +101,11 @@ public class RpgPlayer {
         }
 
         int damageToDeal = damage - armour;
-        health -= damageToDeal;
+
+        if (calculateInventoryWeight() < (getCarryingCapacity() * 0.5))
+            health -= (damageToDeal * 0.25);
+        else
+            health -= damageToDeal;
 
         gameEngine.playSpecialEffect("lots_of_gore");
     }
